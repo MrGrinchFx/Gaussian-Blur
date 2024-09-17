@@ -1,5 +1,4 @@
 # Gaussian-Blur
-Kevin Le
 
 In this project, we will be exploring how to implement a Gaussian Blurring program that will inherently alter each pixel of an image in order to take a new pixel value that will be affected by a pixel's surrounding neighbors. 
 	
@@ -17,7 +16,7 @@ In order to generate a proper kernel matrix, the only information needed is the 
 
 
 For the first part of the project, we will first be implementing a serial version of the program in hopes that there will be an avenue that we can further improve the program by employing thousands of slaves (GPU threads) to compute our output file blazingly fast. First, we have to do the dirty work of taking the proper command line parameters and storing them accordingly, open the input file as an unsigned char array, and allocate enough space for our output file. After this, we can then begin to create our kernel_matrix which is going to be created using the convolution equation. 
-
+```
 float* create_gaussian_kernel(int* order, float sigma) {
    // calculate size of the kernel matrix based on command line inputs
    int half_size = (int)(sigma * 3);
@@ -39,8 +38,9 @@ float* create_gaussian_kernel(int* order, float sigma) {
 
    return kernel;
 }
-
+```
 After creating this matrix, we will then apply the Gaussian blur by going through the whole input image while also handling the edge cases that arise when the kernel matrix extends past the boundaries of the input matrix. 
+```
 void apply_gaussian_blur(unsigned char* input, unsigned char* output, int width, int height, float* kernel, int order) {
    int half_size = order / 2;
    // iterate through 2D image
@@ -65,10 +65,11 @@ void apply_gaussian_blur(unsigned char* input, unsigned char* output, int width,
        }
    }
 }
-
+```
 
 
 After we have passed through the whole array, via a very large double-for-loop setup, we can now take this new output matrix and format it into a PGM file and return it.
+```
 void write_pgm(const char* filename, const unsigned char* data, int width, int height, int maxval) {
    FILE* file = fopen(filename, "wb");
    if (!file) {
@@ -79,12 +80,13 @@ void write_pgm(const char* filename, const unsigned char* data, int width, int h
    fwrite(data, 1, width * height, file);
    fclose(file);
 }
-
+```
 
  In order to test the performance of this serial program, we will subject it to 4 different image files of varying sizes to see how performant our program is currently. Below are the results:
 As we can see from the results, the serial implementation struggles to take on larger-sized input maps and has a quadratically growing runtime. In order to combat this, we can use the help of the GPU’s thousands of cores to help tackle this very computationally intensive program. In the following section.
 
 To parallelize this further using our GPU computing power, we will have to first allocate each image file its own pieces of memory in the GPU as well as the image’s kernel to send it over to the device (GPU) from the host (CPU). 
+```
 void apply_gaussian_blur(unsigned char* input, unsigned char* output, int width, int height, float* kernel, int order) {
    unsigned char *d_input, *d_output;
    float *d_kernel;
@@ -117,11 +119,12 @@ void apply_gaussian_blur(unsigned char* input, unsigned char* output, int width,
    cuda_check(cudaFree(d_output));
    cuda_check(cudaFree(d_kernel));
 }
-
+```
 
 
 
 Once we allocate the CUDA memory necessary, we will then call upon the Gaussian blur function as the global function that will run on each of the CUDA threads that we’ll employ to do our computations. Once we send that maps to the device we will allow the CUDA threads to compute their section of the map and send it back to the host. Once the host receives the chunk of the output map, we will then recombine and package the output map as a PGM image.
+```
 __global__ void apply_gaussian_blur_kernel(unsigned char* input, unsigned char* output, int width, int height, float* kernel, int order) {
    int half_size = order / 2;
    int i = blockIdx.y * blockDim.y + threadIdx.y;
@@ -146,7 +149,7 @@ __global__ void apply_gaussian_blur_kernel(unsigned char* input, unsigned char* 
        output[i * width + j] = (unsigned char)sum;
    }
 }
-
+```
 
 In the same manner that we benchmarked the previous serial version, we will also run our parallelized version against the four variably sized input images and determine its performance based on the time it takes to return an output. Below are the average times of both implementations placed side-by-side for comparison:
 
@@ -161,7 +164,7 @@ As can be seen from the results, we are now seeing much better results as the to
 For completeness, here is the main function for the CUDA implementation (similar to serial):
 
 
-
+```
 //Sample Command: ./gaussian_blur_cuda.cu image.pgm output.pgm 4
 int main(int argc, char* argv[]) {
    if (argc != 4) {
@@ -186,5 +189,5 @@ int main(int argc, char* argv[]) {
    free(kernel);
    return 0;
 }
-
+```
 
