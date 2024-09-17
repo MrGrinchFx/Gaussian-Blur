@@ -9,6 +9,7 @@ Strategy: A Gaussian blur is a 2-D convolution operator that is used to blur ima
 Note that when applying the kernel matrix towards the edges or the corners, the “missing” pixels should be replaced by the nearest existing pixels (those directly on the edges, or corners).
 
 ![Figure 1](https://github.com/MrGrinchFx/Gaussian-Blur/raw/main/gaussianBlur.JPG)
+
 ![Figure 2](https://github.com/MrGrinchFx/Gaussian-Blur/raw/main/equation.JPG)
 
 The kernel matrix for a Gaussian blur is created by the 2-D Gaussian function depicted in Figure 2.
