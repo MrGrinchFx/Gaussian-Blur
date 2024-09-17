@@ -1,7 +1,7 @@
 # Gaussian-Blur
 
 In this project, we will be exploring how to implement a Gaussian Blurring program that will inherently alter each pixel of an image in order to take a new pixel value that will be affected by a pixel's surrounding neighbors. 
-	
+![Image Alt Text](https://github.com/MrGrinchFx/Gaussian-Blur/raw/main/building.png)
 A naive approach to “blurring” an image would be to visit each pixel take the greyscale value of the surrounding 8 pixels and average it with the current pixel. However, this strategy leads to a muddier and less appealing result and is often not used in the real world. Instead, a different approach, the Gaussian Blur, is more common in real-world applications such as Blender or photo editors.
 
 Strategy: A Gaussian blur is a 2-D convolution operator that is used to blur images in order to reduce detail and noise. A Gaussian blur is technically represented as a matrix of weights, also called a kernel or a mask. The convolution is the process of adding each pixel of the image to its local neighbors, weighted by the matrix. The example below shows how a 3x3 kernel matrix is applied to the pixel located at coordinate (1,1) (Figure 1). In order to perform an entire 2-D convolution, such an operation would need to be applied to each pixel of the original image.
