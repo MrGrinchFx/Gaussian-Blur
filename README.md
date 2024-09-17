@@ -1,11 +1,16 @@
 # Gaussian-Blur
 
 In this project, we will be exploring how to implement a Gaussian Blurring program that will inherently alter each pixel of an image in order to take a new pixel value that will be affected by a pixel's surrounding neighbors. 
-![Image Alt Text](https://github.com/MrGrinchFx/Gaussian-Blur/raw/main/building.png)
+![Image Alt Text](https://github.com/MrGrinchFx/Gaussian-Blur/raw/main/building.png) ![Image Alt Text](https://github.com/MrGrinchFx/Gaussian-Blur/raw/main/blurredBuilding.png)
+
 A naive approach to “blurring” an image would be to visit each pixel take the greyscale value of the surrounding 8 pixels and average it with the current pixel. However, this strategy leads to a muddier and less appealing result and is often not used in the real world. Instead, a different approach, the Gaussian Blur, is more common in real-world applications such as Blender or photo editors.
 
 Strategy: A Gaussian blur is a 2-D convolution operator that is used to blur images in order to reduce detail and noise. A Gaussian blur is technically represented as a matrix of weights, also called a kernel or a mask. The convolution is the process of adding each pixel of the image to its local neighbors, weighted by the matrix. The example below shows how a 3x3 kernel matrix is applied to the pixel located at coordinate (1,1) (Figure 1). In order to perform an entire 2-D convolution, such an operation would need to be applied to each pixel of the original image.
 Note that when applying the kernel matrix towards the edges or the corners, the “missing” pixels should be replaced by the nearest existing pixels (those directly on the edges, or corners).
+
+![Figure 1](https://github.com/MrGrinchFx/Gaussian-Blur/raw/main/gaussianBlur.jpg)
+![Figure 2](https://github.com/MrGrinchFx/Gaussian-Blur/raw/main/equation.png)
+
 The kernel matrix for a Gaussian blur is created by the 2-D Gaussian function depicted in Figure 2.
 x is the distance from the origin in the horizontal axis,
 y is the distance from the origin in the vertical axis,
@@ -83,6 +88,9 @@ void write_pgm(const char* filename, const unsigned char* data, int width, int h
 ```
 
  In order to test the performance of this serial program, we will subject it to 4 different image files of varying sizes to see how performant our program is currently. Below are the results:
+
+![Serial Results](https://github.com/MrGrinchFx/Gaussian-Blur/raw/main/serialResults.jpg)
+ 
 As we can see from the results, the serial implementation struggles to take on larger-sized input maps and has a quadratically growing runtime. In order to combat this, we can use the help of the GPU’s thousands of cores to help tackle this very computationally intensive program. In the following section.
 
 To parallelize this further using our GPU computing power, we will have to first allocate each image file its own pieces of memory in the GPU as well as the image’s kernel to send it over to the device (GPU) from the host (CPU). 
@@ -155,7 +163,7 @@ In the same manner that we benchmarked the previous serial version, we will also
 
 
 
-
+![CUDA vs Serial Results](https://github.com/MrGrinchFx/Gaussian-Blur/raw/main/CudaVsSerial.jpg)
 
 
 
