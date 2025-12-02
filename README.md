@@ -9,7 +9,7 @@ In this project, we will be exploring how to implement a Gaussian Blurring progr
 A naive approach to “blurring” an image would be to visit each pixel take the greyscale value of the surrounding 8 pixels and average it with the current pixel. However, this strategy leads to a muddier and less appealing result and is often not used in the real world. Instead, a different approach, the Gaussian Blur, is more common in real-world applications such as Blender or photo editors.
 
 # Usage:
-1. Make
-2. For CPU Implementation: ./gaussian_blur_serial <path_to_pgm_file>
-3. For CUDA Implemenation: ./gaussian_blur_cuda <path_to_pgm_file> (Please be sure that your system is CUDA capable)
+1. run ```Makefile```
+2. For CPU Implementation: ```./gaussian_blur_serial <path_to_pgm_file>```
+3. For CUDA Implemenation: ```./gaussian_blur_cuda <path_to_pgm_file>``` (Please be sure that your system is CUDA capable)
 
